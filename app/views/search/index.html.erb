@@ -1,0 +1,20 @@
+<h1><%= link_to 'Github search', root_path %></h1>
+
+<%= form_tag(search_index_path, method: :get) do %>
+  <%= text_field_tag(:search, params[:search], required: true) %>
+  <%= submit_tag ("Search") %>
+
+  <% if @repositories.present? %>
+    <p>Страница: </p>
+    <%= select_tag :page, options_for_select(1..@total_pages, @selected_page), onchange: "this.form.submit();" %>
+    <% @repositories['items'].each do |item| %>
+      <ul>
+        <li><%= link_to item['full_name'], url_for(item['html_url']) %>
+          <%= ", #{item['description']}" %>
+          <br>
+        </li>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>
+
