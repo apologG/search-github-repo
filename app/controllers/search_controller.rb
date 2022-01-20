@@ -1,7 +1,7 @@
 class SearchController < ApplicationController
 
   def index
-    @repositories = Search.search(params[:search], params[:page])
+    @repositories = Github::GithubSearch.search(params[:search], params[:page])
     if @repositories.present?
       @selected_page = params[:page]
       @total_pages = pages(@repositories)
