@@ -2,8 +2,19 @@ require 'rails_helper'
 
 RSpec.describe "Searches", type: :request do
 
+  before do 
+    stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=1&q=ruby&sort=best%20match").to_return(
+      status: 200, 
+      body: File.read('spec/fixtures/response.json'), 
+      headers: {})
+
+    stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=25&q=ruby&sort=best%20match").to_return(
+      status: 200, 
+      body: File.read('spec/fixtures/response.json'), 
+      headers: {})  
+  end
+
   context "GET search repositories" do
-    
     it 'should show index/search page' do 
       get '/'
       expect(response).to have_http_status(200)
