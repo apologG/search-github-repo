@@ -35,7 +35,6 @@ RSpec.describe 'Searches', type: :request do
       expect(response).to have_http_status(200)
       expect(response).to render_template(:index)
       expect(request.params['page']).to eq "25"
-      p request.url
     end
   end
 
@@ -44,9 +43,7 @@ RSpec.describe 'Searches', type: :request do
 
     it 'should have correct url query' do 
       get '/', :params => {search: 'ruby', page: 25}
-      p request.url
       expect(WebMock).to have_requested(:get ,'https://api.github.com/search/repositories').with(query: hash_including(query))
-     
     end
     
   end
