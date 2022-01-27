@@ -11,11 +11,17 @@ RSpec.describe 'Searches', type: :request do
     stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=25&q=ruby&sort=best%20match").to_return(
       status: 200, 
       body: File.read('spec/fixtures/response.json'), 
-      headers: {})  
+      headers: {})
+    
+    stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=20&q=ruby&sort=best%20match").to_return(
+      status: [500, "Internal Server Error"])  
+      
+    stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=15&q=ruby&sort=best%20match").to_timeout
+
   end
 
   context 'GET search repositories' do
-    it 'should show index/search page' do 
+   it 'should show index/search page' do 
       get '/'
       expect(response).to have_http_status(200)
       expect(response).to render_template(:index)
@@ -25,7 +31,6 @@ RSpec.describe 'Searches', type: :request do
       get '/', :params => {search: 'ruby'}
       expect(response).to have_http_status(200)
       expect(response).to render_template(:index)
-      p request.url
     end
   end
   
@@ -45,8 +50,18 @@ RSpec.describe 'Searches', type: :request do
       get '/', :params => {search: 'ruby', page: 25}
       expect(WebMock).to have_requested(:get ,'https://api.github.com/search/repositories').with(query: hash_including(query))
     end
-    
   end
   
+  context "side API" do
+
+    it '500 error' do
+      # to do 
+    end
+
+    it 'time out error' do
+      # to do
+    end
+    
+  end
   
 end
