@@ -24,21 +24,20 @@ module Github
         end
            
         response = find_repositories
-        if response.code != 200
-          JSON.parse(response)
-        else
-          false
-        end
+        JSON.parse(response)
+
     end
 
     def find_repositories
-      # begin
-      RestClient.get @uri, {params: {q: @search_line, sort: 'best match',  order:'desc', page: @page}}
-      # rescue RestClient::RequestTimeout => e
-      #   e.message
-      # rescue RestClient::ExceptionWithResponse => e 
-      #   e.message
-      # end
+      begin
+        RestClient.get @uri, {params: {q: @search_line, sort: 'best match',  order:'desc', page: @page}}
+      rescue RestClient::RequestTimeout  => e
+        raise e
+      rescue RestClient::ExceptionWithResponse => e 
+        raise e
+      rescue StandardError => e
+        raise e
+      end
     end
   
   end

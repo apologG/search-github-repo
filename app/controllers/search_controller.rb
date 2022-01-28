@@ -1,7 +1,16 @@
 class SearchController < ApplicationController
 
   def index
+  begin 
     @repositories = Github::GithubApi.call(params[:search], params[:page])
+  rescue RestClient::RequestTimeout => e
+    flash[:alert] = e.message
+  rescue RestClient::ExceptionWithResponse => e 
+    flash[:alert] = e.message
+  rescue StandardError => e
+    flash[:alert] = e.message
+  end
+    
     if @repositories.present?
       @selected_page = params[:page]
       @total_pages = pages(@repositories)

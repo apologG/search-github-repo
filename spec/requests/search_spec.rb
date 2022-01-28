@@ -10,7 +10,7 @@ RSpec.describe 'Searches', type: :request do
 
     stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=25&q=ruby&sort=best%20match").to_return(
       status: 200, 
-      body: File.read('spec/fixtures/response.json'), 
+      body: File.read('spec/fixtures/responce_page_25.json'), 
       headers: {})
     
     stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=20&q=ruby&sort=best%20match").to_return(
@@ -31,6 +31,8 @@ RSpec.describe 'Searches', type: :request do
       get '/', :params => {search: 'ruby'}
       expect(response).to have_http_status(200)
       expect(response).to render_template(:index)
+      expect(response.body).to include('ruby/ruby')
+      expect(response.body).to include('The Ruby Programming Language [mirror]')
     end
   end
   
@@ -39,6 +41,8 @@ RSpec.describe 'Searches', type: :request do
       get '/', :params => {search: 'ruby', page: 25}
       expect(response).to have_http_status(200)
       expect(response).to render_template(:index)
+      expect(response.body).to include('bitmakerlabs/learn_ruby')
+      expect(response.body).to include('Ethereum library for the Ruby language')
       expect(request.params['page']).to eq "25"
     end
   end
@@ -51,17 +55,18 @@ RSpec.describe 'Searches', type: :request do
       expect(WebMock).to have_requested(:get ,'https://api.github.com/search/repositories').with(query: hash_including(query))
     end
   end
-  
   context "side API" do
 
     it '500 error' do
-      # to do 
+      get '/', :params => {search: 'ruby', page: 20}
+      expect(response.body).to include('500 Internal Server Error')
     end
 
     it 'time out error' do
-      # to do
+      get '/', :params => {search: 'ruby', page: 15}
+
+      expect(response.body).to include('Timed out connecting to server')
     end
-    
   end
-  
+    
 end
