@@ -10,7 +10,7 @@ RSpec.describe 'Searches', type: :request do
 
     stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=25&q=ruby&sort=best%20match").to_return(
       status: 200, 
-      body: File.read('spec/fixtures/responce_page_25.json'), 
+      body: File.read('spec/fixtures/response_page_25.json'), 
       headers: {})
     
     stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=20&q=ruby&sort=best%20match").to_return(

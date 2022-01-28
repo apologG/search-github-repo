@@ -6,7 +6,7 @@ RSpec.describe Github::GithubApi do
 	  before do 
 			stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=25&q=ruby&sort=best%20match").to_return(
 				status: 200, 
-				body: File.read('spec/fixtures/response.json'), 
+				body: File.read('spec/fixtures/response_page_25.json'), 
 				headers: {})
 			stub_request(:get, "https://api.github.com/search/repositories?order=desc&page=1&q=ruby&sort=best%20match").to_return(
 				status: 200, 
